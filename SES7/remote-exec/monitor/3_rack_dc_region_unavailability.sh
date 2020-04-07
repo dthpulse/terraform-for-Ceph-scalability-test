@@ -20,9 +20,9 @@ function cluster_health(){
 function iptables_drop() {
     ssh -tt ${1} << EOF
 iptables -I OUTPUT -d localhost -j ACCEPT
-iptables -I OUTPUT -d $master -j ACCEPT
+iptables -I OUTPUT -d $(hostname -f) -j ACCEPT
 iptables -I INPUT -s localhost -j ACCEPT
-iptables -I INPUT -s $master -j ACCEPT
+iptables -I INPUT -s $(hostname -f) -j ACCEPT
 iptables -P INPUT DROP
 iptables -P OUTPUT DROP
 exit
@@ -69,7 +69,18 @@ function wait_until_down() {
     ceph osd tree
 }
 
-domain="$(hostname -f | cut -d . -f 2)"
+function check_container_exists () {
+    local old_container=$1
+    local chck_container=$(podman ps | awk 'FNR==2{print $1}')
+    if [ "$old_container" != "$chck_container" ]
+    then
+        container="$chck_container"        
+        podman cp /etc/ceph/ceph.client.admin.keyring ${container}:/etc/ceph/ceph.client.admin.keyring
+        podman cp /tmp/${crushmap_file}.txt ${container}:/tmp/${crushmap_file}.txt
+    fi
+}
+
+domain="${master#*.}"
 container=$(podman ps | awk 'FNR==2{print $1}')
 crushmap_file="crushmap"
 echo "Getting crushmap"
@@ -267,6 +278,7 @@ cluster_health
 ceph osd pool rm crushmap crushmap --yes-i-really-really-mean-it
 
 # set back default crushmap
+check_container_exists $container
 podman exec $container ceph osd setcrushmap -i /tmp/${crushmap_file}.bin
 
 ceph osd crush tree
