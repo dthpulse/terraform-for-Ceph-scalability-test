@@ -38,6 +38,8 @@ Additionally:
 	zypper in -y pdsh
 	```
 
+  - install *kernel-default* instead of kernel-default-base
+
 	See [Create repositories for JeOS](https://gitlab.suse.de/denispolom/terraform_ses_scalability_test/-/wikis/Create_repositories_for_JeOS)
 
 #### How it works
