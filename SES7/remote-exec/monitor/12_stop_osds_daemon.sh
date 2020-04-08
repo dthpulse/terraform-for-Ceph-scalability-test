@@ -25,7 +25,7 @@ echo "### Getting random minion and OSD to stop OSD on ###"
 osd_nodes=($osd_nodes)
 random_minion_fqdn=${osd_nodes[0]}
 random_minion=$(echo $random_minion_fqdn | cut -d . -f 1)
-random_osd=$(ceph osd tree | grep -A 1 $random_minion | grep -o osd.* | grep -v "down" | awk '! /'$random_minion'/{print $1}')
+random_osd=$(ceph osd tree | grep -A 1 $random_minion | awk 'FNR==2{print $4}')
 ceph_id=$(ceph fsid)
 
 ssh $random_minion_fqdn "systemctl stop ceph-${ceph_id}@${random_osd}.service"

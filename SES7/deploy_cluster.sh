@@ -150,6 +150,7 @@ function revert_master_sleep () {
 
 function empty_null_resource () {
     local node=$1
+
     cat << EOF >> terraform/scripts.tf
 resource "null_resource" "${node}_scripts" {
     count = "1"
@@ -166,6 +167,7 @@ EOF
 function fill_out_null_resource () {
     local node=$1
     local script=$2
+
     cat << EOF >> terraform/scripts.tf
     provisioner "remote-exec" {
         script = "\${var.${node}-remote-exec_path}/$script"
