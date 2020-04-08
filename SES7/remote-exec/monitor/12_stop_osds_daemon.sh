@@ -22,61 +22,43 @@ sleep 5
 while [ $(ceph -s | grep creating -c) -gt 0 ]; do echo -n .;sleep 1; done
 
 echo "### Getting random minion and OSD to stop OSD on ###"
+
 osd_nodes=($osd_nodes)
-random_minion_fqdn=${osd_nodes[0]}
-random_minion=$(echo $random_minion_fqdn | cut -d . -f 1)
-random_osd=$(ceph osd tree | grep -A 1 $random_minion | awk 'FNR==2{print $4}')
-ceph_id=$(ceph fsid)
 
-ssh $random_minion_fqdn "systemctl stop ceph-${ceph_id}@${random_osd}.service"
-
-sleep 5
-
-echo "### Checking cluster health ###"
-ceph -s
-
-until [ "$(ceph health)" == "HEALTH_OK" ]
+for node in ${osd_nodes[0]} ${osd_nodes[1]}
 do
-    let n+=30
-    sleep 30
-    echo "waiting till health is OK."
+    random_minion_fqdn="$node"
+    random_minion="${random_minion_fqdn%%.*}"
+    random_osd=$(ceph osd tree | grep -A 1 $random_minion | awk 'FNR==2{print $4}')
+    ceph_id=$(ceph fsid)
+
+    stopped_osds+=($random_osd)
+    ssh $random_minion_fqdn "systemctl stop ceph-${ceph_id}@${random_osd}.service"
+
+    sleep 5
+
+    echo "### Checking cluster health ###"
+    ceph -s
+
+    until [ "$(ceph health)" == "HEALTH_OK" ]
+    do
+        let n+=30
+        sleep 30
+        echo "waiting till health is OK."
+    done
+
+    echo "Total waiting time ${n}s."
+    unset n
+    
+    ceph osd tree
+    ceph -s
 done
-
-echo "Total waiting time ${n}s."
-unset n
-
-ceph osd tree
-ceph -s
-
-
-echo "### Getting second random minion and OSD to stop OSD on ###"
-random_minion2_fqdn=${osd_nodes[1]}
-random_minion2=$(echo $random_minion2_fqdn | cut -d . -f 1)
-random_osd2=$(ceph osd tree | grep -A 1 $random_minion2 | grep -o osd.* | grep -v "down" | awk '! /'$random_minion2'/{print $1}')
- 
-ssh $random_minion2_fqdn "systemctl stop ceph-${ceph_id}@${random_osd2}.service"
-
-sleep 5
-
-echo "### Checking cluster health ###"
-ceph -s 
-
-until [ "$(ceph health)" == "HEALTH_OK" ]
-do
-    let n+=30
-    sleep 30
-    echo "waiting till health is OK."
-done
-
-echo "Total waiting time ${n}s."
-unset n
-
-ceph osd tree
-ceph -s
 
 echo "### Starting previously stopped OSDs ###"
-ssh $random_minion_fqdn "systemctl start ceph-${ceph_id}@${random_osd}.service"
-ssh $random_minion2_fqdn "systemctl start ceph-${ceph_id}@${random_osd2}.service"
+for i in ${!stopped_osds[@]}
+do
+    ssh ${osd_nodes[i]} "systemctl start ceph-${ceph_id}@${stopped_osds[i]}.service"
+done
 
 echo "### Removing pool ###"
 ceph osd pool rm stoposddeamon stoposddeamon --yes-i-really-really-mean-it
