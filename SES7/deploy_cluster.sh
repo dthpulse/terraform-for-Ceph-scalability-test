@@ -313,6 +313,7 @@ EOF
     tweak_terraform_tfvars $all_given_args
 
     # terraform scripts.tf
+    echo -e "\n Creating terraform scripts"
     rm -f terraform/scripts.tf 2>/dev/null
     if $bv_scripts_monitor
     then
@@ -337,6 +338,8 @@ EOF
 
 	finish_null_resource "master"
     fi
+
+    cp -ap $PWD/terraform/scripts.tf projects/$name/terraform
 
     # deploy cluster
     terraform_apply $name
