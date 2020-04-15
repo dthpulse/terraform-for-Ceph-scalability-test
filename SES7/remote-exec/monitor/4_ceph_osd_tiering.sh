@@ -47,7 +47,7 @@ ceph osd pool set hot-storage cache_min_flush_age 600
 ceph osd pool set hot-storage cache_min_evict_age 1800
 
 ### Getting cluster health status ###
-ceph health | grep "HEALTH_OK"
+ceph health 
 
 rbd create -p hot-storage image1 --size 2G
 rbd_dev=$(rbd map hot-storage/image1)
