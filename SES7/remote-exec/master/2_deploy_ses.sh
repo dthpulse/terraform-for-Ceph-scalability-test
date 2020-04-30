@@ -13,20 +13,20 @@ salt \* saltutil.sync_all
 
 sleep 15
 
-ceph-salt config "/Ceph_Cluster/Minions add *" 
-ceph-salt config "/Ceph_Cluster/Roles/Admin add $master"
+ceph-salt config /ceph_cluster/minions add "*"
+ceph-salt config /ceph_cluster/roles/admin add "$master"
 
-ceph-salt config "/Ceph_Cluster/Roles/Bootstrap set ${monitors[0]}"
+ceph-salt config /ceph_cluster/roles/bootstrap set "${monitors[0]}"
 
 for i in ${monitors[@]}
 do
-    ceph-salt config "/Ceph_Cluster/Roles/Admin add $i"
+    ceph-salt config /ceph_cluster/roles/admin add "$i"
 done
 
-ceph-salt config "/SSH generate"
-ceph-salt config "/Time_Server/Server_Hostname set $master"
-ceph-salt config "/Time_Server/External_Servers add 0.us.pool.ntp.org"
-ceph-salt config "/Containers/Images/ceph set registry.suse.de/suse/sle-15-sp2/update/products/ses7/milestones/containers/ses/7/ceph/ceph"
+ceph-salt config /ssh generate
+ceph-salt config /time_server/server_hostname set "$master"
+ceph-salt config /time_server/external_servers add "ntp.suse.cz"
+ceph-salt config /containers/images/ceph set "registry.suse.de/suse/sle-15-sp2/update/products/ses7/milestones/containers/ses/7/ceph/ceph"
 ceph-salt config ls
 
 ceph-salt status
