@@ -299,13 +299,7 @@ EOF
     echo "= = ="
 
     # registries
-    echo "${registry%%:*} ecp-registry.openstack.local ecp-registry" > projects/$name/conf/hosts
-    cat << EOF > projects/$name/conf/containers/registries.conf
-[[registry]]
-prefix = "registry.suse.de"
-location = "$registry"
-insecure = true
-EOF
+    sed -i "s/location=.*\ /location=$registry\ /" remote-exec/master/2_deploy_ses.sh
 
     master_sleep
    
