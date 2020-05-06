@@ -34,7 +34,7 @@ ceph-salt status
 
 ceph-salt export > myconfig.json
 
-ceph-salt deploy --non-interactive
+ceph-salt apply --non-interactive
 
 cat <<EOF > cluster.yaml
 service_type: mon

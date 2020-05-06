@@ -16,7 +16,7 @@ awk '!/ecp-registry/{print $1}' ~/conf/hosts > /tmp/pdsh_hosts_ips.txt
 
 cp ~/conf/ssh/config ~/.ssh/
 
-pdsh -w ^/tmp/pdsh_hosts_ips.txt "zypper --gpg-auto-import-keys ar -G -f $ses_repo_url ${ses_repo_url##*/}"
+pdsh -w ^/tmp/pdsh_hosts_ips.txt "zypper --gpg-auto-import-keys ar -G -f $ses_repo_url"
 pdsh -w ^/tmp/pdsh_hosts_ips.txt "zypper --gpg-auto-import-keys ar -G -f http://download.suse.de/ibs/SUSE:/CA/SLE_15_SP2/SUSE:CA.repo"
 pdsh -w ^/tmp/pdsh_hosts_ips.txt "zypper -qqq in -y -t pattern base enhanced_base"
 pdsh -w ^/tmp/pdsh_hosts_ips.txt -x $master "zypper -qqq in --allow-vendor-change -y salt-minion bc vim less ca-certificates-suse jq netcat-openbsd which"
