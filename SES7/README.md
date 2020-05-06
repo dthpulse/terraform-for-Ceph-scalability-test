@@ -20,14 +20,16 @@ Follow [this](https://gitlab.suse.de/denispolom/vagrant_ses/tree/master/openstac
 
 Additionally:
 
+  - on ecp-registry server mount current SLE image to */srv/www/htdocs/current_os*
+
+  - on ecp-registry server mount current SES image to */srv/www/htdocs/current_ses*
+
   - add repositories for actual distro.
     
 	Example:
 
 	```bash
-    zypper ar -f http://ecp-registry/sle15sp2snap7/Product-SLES Product-SLES
-	zypper ar -f http://ecp-registry/sle15sp2snap7/Module-Server-Applications Module-Server-Applications
-	zypper ar -f http://ecp-registry/sle15sp2snap7/Module-Basesystem Module-Basesystem
+    zypper ar -f http://ecp-registry/current_os.repo
 	```
 
   - add repositories for *pdsh* and install the *pdsh* package
