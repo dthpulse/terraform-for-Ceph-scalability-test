@@ -26,8 +26,6 @@ pdcp -w ^/tmp/pdsh_hosts_ips.txt ~/conf/bashrc /root/.bashrc
 pdcp -w ^/tmp/pdsh_hosts_ips.txt ~/conf/minions.conf /etc/salt/minion.d/minions.conf
 pdcp -w ^/tmp/pdsh_hosts_ips.txt ~/conf/ssh/id_rsa* ~/.ssh/
 pdcp -w ^/tmp/pdsh_hosts_ips.txt -x $master ~/conf/ssh/config ~/.ssh/
-pdsh -w ^/tmp/pdsh_hosts_ips.txt "mkdir /etc/containers"
-pdcp -w ^/tmp/pdsh_hosts_ips.txt ~/conf/containers/registries.conf /etc/containers/registries.conf
 pdcp -w ^/tmp/pdsh_hosts_ips.txt ~/conf/hosts /tmp/hosts
 pdsh -w ^/tmp/pdsh_hosts_ips.txt -x $master "cat /tmp/hosts >> /etc/hosts"
 pdsh -w ^/tmp/pdsh_hosts_ips.txt "cat ~/.ssh/id_rsa2.pub >> ~/.ssh/authorized_keys"

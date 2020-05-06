@@ -237,7 +237,7 @@ then
 	exit 1
     fi
 
-    mkdir -p projects/$name/conf/{ssh,containers} 2>/dev/null
+    mkdir -p projects/$name/conf/ssh 2>/dev/null
     ln -s $PWD/local-exec projects/$name/
     ln -s $PWD/remote-exec projects/$name/
     cp -rap $PWD/terraform projects/$name/
