@@ -95,7 +95,6 @@ function terraform_apply () {
 	mkdir projects/$name/terraform/log 2>/dev/null
     TF_LOG=TRACE TF_LOG_PATH=projects/$name/terraform/log/terraform.log terraform apply -auto-approve \
 	    -state=projects/$name/terraform/terraform.tfstate -var-file=projects/$name/terraform/terraform.tfvars projects/$name/terraform/
-    cd - 2>&1 >/dev/null
 }
 
 function tweak_terraform_tfvars () {
@@ -346,7 +345,6 @@ then
     test -d "projects/$name" || exit 1
     terraform destroy -state=projects/$name/terraform/terraform.tfstate \
 	    -var-file=projects/$name/terraform/terraform.tfvars -auto-approve projects/$name/terraform/
-    cd - 2>&1 > /dev/null
     if [ ! -z "$rcfile" ]
     then
         . $rcfile
