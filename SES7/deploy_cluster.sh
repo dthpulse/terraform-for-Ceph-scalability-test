@@ -38,7 +38,7 @@ function helpme () {
       --osd NUMBER                              number of OSD nodes
       --mon NUMBER                              number of Monitor nodes
       --workers NUMBER                          number of salt-master worker threads
-      --registry IP:PORT                        IP and port of registry server 172.16.0.6:5000
+      --registry IP:PORT                        IP and port of registry server 172.16.0.24:5000
       --name NAME                               name of your project under which terraform files 
                                                 will be saved
       --username USERNAME                       username for login to ECP
@@ -65,7 +65,7 @@ function helpme () {
     arguments to deploy SES from existing project:
       --existing
       --name NAME                               name of existing project that was destroyed
-      --registry IP:PORT                        IP and port of registry server 172.16.0.6:5000
+      --registry IP:PORT                        IP and port of registry server 172.16.0.24:5000
                                                 and needs to be deployed again
     arguments to destroy SES cluster:
       --destroy                                 runs 'terraform destroy -auto-approve'
