@@ -90,11 +90,12 @@ done
 
 function terraform_apply () {
     local name=$1
-    test -d "projects/$name" || exit 1
-    terraform init projects/$name/terraform/
-	mkdir projects/$name/terraform/log 2>/dev/null
-    TF_LOG=TRACE TF_LOG_PATH=projects/$name/terraform/log/terraform.log terraform apply -auto-approve \
-	    -state=projects/$name/terraform/terraform.tfstate -var-file=projects/$name/terraform/terraform.tfvars projects/$name/terraform/
+    cd projects/$name 
+    terraform init terraform/
+	mkdir terraform/log 2>/dev/null
+    TF_LOG=TRACE TF_LOG_PATH=terraform/log/terraform.log terraform apply -auto-approve \
+	    -state=terraform/terraform.tfstate -var-file=terraform/terraform.tfvars terraform/
+    cd - 2>&1 >/dev/null
 }
 
 function tweak_terraform_tfvars () {
