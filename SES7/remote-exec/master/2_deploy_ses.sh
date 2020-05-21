@@ -57,11 +57,7 @@ ceph orch apply -i cluster.yaml
 # wait until all OSDs are deployed
 for i in ${osd_nodes[@]%%.*}
 do  
-    while [ ! "$(ceph osd tree --format=json | jq -r '.nodes[] | .name, .status'  \
-               | grep -v default \
-               | sed 's/null//g' \
-               | tr '\n' ' ' \ 
-               | awk "/$i/ && /osd./ && ! /down/{print \$0}")" ]
+    while [ ! "$(ceph osd tree --format=json | jq -r '.nodes[] | .name, .status'  | grep -v default | sed 's/null//g' | tr '\n' ' ' | awk "/$i/ && /osd./ && ! /down/{print \$0}")" ]
     do
         sleep 60
     done
