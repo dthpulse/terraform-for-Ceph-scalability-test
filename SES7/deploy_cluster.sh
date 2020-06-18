@@ -344,8 +344,9 @@ elif $destroy
 then
     arguments_check ${destroy_required_args[@]}
     test -d "projects/$name" || exit 1
-    terraform destroy -state=projects/$name/terraform/terraform.tfstate \
-	    -var-file=projects/$name/terraform/terraform.tfvars -auto-approve projects/$name/terraform/
+    cd projects/$name 
+    terraform destroy -state=terraform/terraform.tfstate \
+	    -var-file=terraform/terraform.tfvars -auto-approve terraform/
     if [ ! -z "$rcfile" ]
     then
         . $rcfile
@@ -353,6 +354,7 @@ then
         openstack volume list | awk '/available/ {print $2}' | xargs -I {} openstack volume delete {}
 	for i in $(env | grep OS_ | cut -d = -f 1);do unset $i; done
     fi
+    cd - >/dev/null 2>&1
 
 elif $existing
 then
