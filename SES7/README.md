@@ -58,7 +58,7 @@ Additionally:
 
 - under directory *`remote-exec`* are scripts that runs on deployed instances. These are scripts for deployment of SES or its services or BV testing itself. To include new scripts into the testing edit **main.tf** file and add entry under **null_resource**.
 
-  ```json
+  ```
   resource "null_resource" "scripts" {
     count = "1"
     connection {
@@ -78,7 +78,7 @@ Additionally:
 
   For example you want to add script **remote-exec/my_new_script.sh** that will be run after *update_monitors.sh* then it would looks like this:
 
-  ```json
+  ```
     resource "null_resource" "scripts" {
     count = "1"
     connection {
