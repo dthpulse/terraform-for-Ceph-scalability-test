@@ -63,7 +63,8 @@ Additionally:
   example:
 
   ```
-  ./deploy_cluster.sh --apply --rsa --basename scalam19 --osd 100 --mon 1 --workers 50 --registry 172.16.0.24:5000 --name scalam19 --username openstackusername --password
- openstactuserpwd --ses-repo-url http://ecp-registry/current_ses.repo --image-name sle15sp2gm-scalability --bv-scripts-master --mon-flavor m1.large --master-f
-lavor m1.xlarge --osd-flavor m1.medium --master-sleep 300
+  ./deploy_cluster.sh --apply --rsa --basename scalam19 --osd 100 --mon 1 --workers 50 \
+  --registry 172.16.0.24:5000 --name scalam19 --username openstackusername --password openstactuserpwd \
+  --ses-repo-url http://ecp-registry/current_ses.repo --image-name sle15sp2gm-scalability --bv-scripts-master \
+  --mon-flavor m1.large --master-flavor m1.xlarge --osd-flavor m1.medium --master-sleep 300
   ```
