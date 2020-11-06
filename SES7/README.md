@@ -16,7 +16,7 @@
 
 #### Preparing JeOS image
 
-Follow [this](https://gitlab.suse.de/denispolom/vagrant_ses/tree/master/openstack#preparing-image-for-the-openstack-instances) for preparing the JeOS image.
+  - Prepare JeOS image.
 
 Additionally:
 
@@ -42,8 +42,6 @@ Additionally:
 
   - install *kernel-default* instead of kernel-default-base
 
-	See [Create repositories for JeOS](https://gitlab.suse.de/denispolom/terraform_ses_scalability_test/-/wikis/Create_repositories_for_JeOS)
-
 #### How it works
 
 1. Edit *`terraform/terraform.tfvars`*
@@ -56,45 +54,16 @@ Additionally:
 
 - under directory *`local-exec`* are scripts that runs localy. Read Terraform documentation for more informations.
 
-- under directory *`remote-exec`* are scripts that runs on deployed instances. These are scripts for deployment of SES or its services or BV testing itself. To include new scripts into the testing edit **main.tf** file and add entry under **null_resource**.
+- under directory *`remote-exec`* are scripts that runs on deployed instances. These are scripts for deployment of SES or its services or BV testing itself. To include new scripts into the testing just add them under *`remote-exec`* directory into the `master` or `monitor`. Scripts are desired to run on some order use number prefix with underscore on the beginning of the script name.
+
+#### Executing
+
+- run `./deploy_cluster.sh -h` to list or needed options.
+
+  example:
 
   ```
-  resource "null_resource" "scripts" {
-    count = "1"
-    connection {
-        type = "ssh"
-        user = "root"
-        host = "${openstack_networking_floatingip_v2.monitor_nodes_ip.*.address[count.index]}"
-        #script_path = "/root/haha.sh"
-        private_key = "${file(var.ssh_key_path)}"
-        password    = "${var.ssh_password}"
-    }
-    provisioner "remote-exec" {
-        script = "remote-exec/update_monitors.sh"
-    }
-    depends_on = [openstack_compute_floatingip_associate_v2.master_ip]
-  }
-  ```
-
-  For example you want to add script **remote-exec/my_new_script.sh** that will be run after *update_monitors.sh* then it would looks like this:
-
-  ```
-    resource "null_resource" "scripts" {
-    count = "1"
-    connection {
-        type = "ssh"
-        user = "root"
-        host = "${openstack_networking_floatingip_v2.monitor_nodes_ip.*.address[count.index]}"
-        #script_path = "/root/haha.sh"
-        private_key = "${file(var.ssh_key_path)}"
-        password    = "${var.ssh_password}"
-    }
-    provisioner "remote-exec" {
-        script = "remote-exec/update_monitors.sh"
-    }
-    provisioner "remote-exec" {
-        script = "remote-exec/my_new_script.sh"
-    }
-    depends_on = [openstack_compute_floatingip_associate_v2.master_ip]
-  }
+  ./deploy_cluster.sh --apply --rsa --basename scalam19 --osd 100 --mon 1 --workers 50 --registry 172.16.0.24:5000 --name scalam19 --username openstackusername --password
+ openstactuserpwd --ses-repo-url http://ecp-registry/current_ses.repo --image-name sle15sp2gm-scalability --bv-scripts-master --mon-flavor m1.large --master-f
+lavor m1.xlarge --osd-flavor m1.medium --master-sleep 300
   ```
